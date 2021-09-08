@@ -1,0 +1,39 @@
+{
+  "frames": {
+    "oatv-logo.png": {
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 444,
+        "h": 441
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 241,
+        "y": 203,
+        "w": 444,
+        "h": 441
+      },
+      "sourceSize": {
+        "w": 1000,
+        "h": 1000
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    }
+  },
+  "meta": {
+    "app": "http://free-tex-packer.com",
+    "version": "0.6.7",
+    "image": "texture.png",
+    "format": "RGBA8888",
+    "size": {
+      "w": 444,
+      "h": 441
+    },
+    "scale": 1
+  }
+}
