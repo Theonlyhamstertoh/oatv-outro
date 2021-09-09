@@ -1,5 +1,6 @@
 import "./style.css";
 import * as PIXI from "pixi.js";
+import { v4 as uuidv4 } from "uuid";
 // import { AsciiFilter } from "@pixi/filter-ascii";
 
 // color array
@@ -22,15 +23,17 @@ const app: PIXI.Application = new PIXI.Application({
  * Filters
  */
 
+const number = 4;
 const loader: PIXI.Loader = PIXI.Loader.shared;
 loader.add("/oatv-logo.png").load(() => {
   const texture: PIXI.Texture<PIXI.Resource> = loader.resources["/oatv-logo.png"].texture!;
 
-  for (let i = 0; i < 2; i++) {
+  for (let i = 0; i < number; i++) {
     const scaleFactor = 0.5;
     const oatv_sprite: PIXI.Sprite = new PIXI.Sprite(texture);
     oatv_sprite.anchor.set(0.5);
     oatv_sprite.scale.set(scaleFactor);
+
     oatv_sprite.x = Math.random() * (app.view.width - oatv_sprite.width) + oatv_sprite.width / 2;
     oatv_sprite.y = Math.random() * (app.view.height - oatv_sprite.height) + oatv_sprite.height / 2;
 
@@ -56,17 +59,26 @@ app.ticker.add(() => {
  */
 window.addEventListener("resize", () => {});
 
+interface velocityObject {
+  x: number;
+  y: number;
+}
 class MovingSprite {
   sprite: PIXI.Sprite;
-  dx: number;
-  dy: number;
   scaleFactor: number;
-
+  mass: number;
+  key: string;
+  velocity: velocityObject;
   constructor(sprite: PIXI.Sprite, scaleFactor: number) {
     this.sprite = sprite;
-    this.dx = Math.random() * 5 * Math.sign(Math.random() > 0.5 ? 1 : -1);
-    this.dy = Math.random() * 5 * Math.sign(Math.random() > 0.5 ? 1 : -1);
+
     this.scaleFactor = scaleFactor;
+    this.velocity = {
+      x: (Math.random() - 0.5) * 5,
+      y: (Math.random() - 0.5) * 5,
+    };
+    this.mass = 1;
+    this.key = uuidv4();
   }
 
   update() {
@@ -75,7 +87,7 @@ class MovingSprite {
       this.sprite.x >= app.view.width - (width * this.scaleFactor) / 2 ||
       this.sprite.x <= 0 + (width * this.scaleFactor) / 2
     ) {
-      this.dx = -this.dx;
+      this.velocity.x = -this.velocity.x;
       this.sprite.tint = colorArray[Math.floor(Math.random() * colorArray.length)];
     }
 
@@ -83,24 +95,38 @@ class MovingSprite {
       this.sprite.y <= 0 + (height * this.scaleFactor) / 2 ||
       this.sprite.y >= app.view.height - (height * this.scaleFactor) / 2
     ) {
-      this.dy = -this.dy;
+      this.velocity.y = -this.velocity.y;
       this.sprite.tint = colorArray[Math.floor(Math.random() * colorArray.length)];
     }
 
     this.animate();
-    // this.detectCollision();
+    this.detectCollision();
   }
 
   animate() {
-    this.sprite.x += this.dx;
-    this.sprite.y += this.dy;
+    this.sprite.x += this.velocity.x;
+    this.sprite.y += this.velocity.y;
   }
 
   detectCollision() {
-    // const xDistance = Math.abs(oatvArray[1].sprite.x - this.sprite.x);
-    // const xSpaceBetween = oatvArray[1].sprite.width / 2 + this.sprite.width / 2;
-    // const yDistance = Math.abs(oatvArray[1].sprite.y - this.sprite.y);
-    // const ySpaceBetween = oatvArray[1].sprite.height / 2 + this.sprite.height / 2;
+    oatvArray.forEach((oatv) => {
+      if (oatv.key === this.key) return;
+      // this is also taking account of itself!It will check against itself and that means, the value will always be at 0.
+      const xSpaceBetween: number = oatv.sprite.width / 2 + this.sprite.width / 2;
+      // const hypotenuse: number = this.distance(oatv, this);
+      const ySpaceBetween = oatv.sprite.height / 2 + this.sprite.height / 2;
+      // console.log(hypotenuse < xSpaceBetween && hypotenuse < ySpaceBetween);
+      const xDistance: number = Math.abs(this.sprite.x - oatv.sprite.x);
+      const yDistance = Math.abs(this.sprite.y - oatv.sprite.y);
+      // if(hypotenuse)
+      // console.log(xSpaceBetween > xDistance);
+      if (ySpaceBetween >= yDistance && xSpaceBetween >= xDistance) {
+        console.log(yDistance);
+        // console.log("has collided");
+        resolveCollision(this, oatv);
+        this.sprite.tint = colorArray[Math.floor(Math.random() * colorArray.length)];
+      }
+    });
     // console.log(xDistance, xSpaceBetween);
     // console.log(xDistance);
     // if (xSpaceBetween >= xDistance ) {
@@ -115,4 +141,60 @@ class MovingSprite {
     //   // this.sprite.tint = colorArray[Math.floor(Math.random() * colorArray.length)];
     // }
   }
+}
+
+// function distance(a: PIXI.Sprite, b: PIXI.Sprite) {
+//   const xDistance: number = b.x - a.x;
+//   const yDistance = b.y - a.y;
+//   console.log(a.x, b);
+//   return Math.sqrt(Math.pow(xDistance, 2) + Math.pow(yDistance, 2));
+// }
+
+function resolveCollision(particle: MovingSprite, otherParticle: MovingSprite) {
+  const xVelocityDiff = particle.velocity.x - otherParticle.velocity.x;
+  const yVelocityDiff = particle.velocity.y - otherParticle.velocity.y;
+
+  const xDist = otherParticle.sprite.x - particle.sprite.x;
+  const yDist = otherParticle.sprite.y - particle.sprite.y;
+
+  // Prevent accidental overlap of particles
+  if (xVelocityDiff * xDist + yVelocityDiff * yDist >= 0) {
+    // Grab angle between the two colliding particles
+    const angle = -Math.atan2(
+      otherParticle.sprite.y - particle.sprite.y,
+      otherParticle.sprite.x - particle.sprite.x
+    );
+
+    // Store mass in var for better readability in collision equation
+    const m1 = particle.mass;
+    const m2 = otherParticle.mass;
+
+    // Velocity before equation
+    const u1 = rotate(particle.velocity, angle);
+    const u2 = rotate(otherParticle.velocity, angle);
+
+    // Velocity after 1d collision equation
+    const v1 = { x: (u1.x * (m1 - m2)) / (m1 + m2) + (u2.x * 2 * m2) / (m1 + m2), y: u1.y };
+    const v2 = { x: (u2.x * (m1 - m2)) / (m1 + m2) + (u1.x * 2 * m2) / (m1 + m2), y: u2.y };
+
+    // Final velocity after rotating axis back to original location
+    const vFinal1 = rotate(v1, -angle);
+    const vFinal2 = rotate(v2, -angle);
+
+    // Swap particle velocities for realistic bounce effect
+    particle.velocity.x = vFinal1.x;
+    particle.velocity.y = vFinal1.y;
+
+    otherParticle.velocity.x = vFinal2.x;
+    otherParticle.velocity.y = vFinal2.y;
+  }
+}
+
+function rotate(velocity: velocityObject, angle: number) {
+  const rotatedVelocities = {
+    x: velocity.x * Math.cos(angle) - velocity.y * Math.sin(angle),
+    y: velocity.x * Math.sin(angle) + velocity.y * Math.cos(angle),
+  };
+
+  return rotatedVelocities;
 }
