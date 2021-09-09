@@ -1,8 +1,8 @@
 import "./style.css";
 import * as PIXI from "pixi.js";
 import { v4 as uuidv4 } from "uuid";
-// import { AsciiFilter } from "@pixi/filter-ascii";
-
+import { AsciiFilter } from "@pixi/filter-ascii";
+import { OldFilmFilter } from "@pixi/filter-old-film";
 // color array
 const colorArray = [
   0xdfff00, 0xffbf00, 0x9fe2bf, 0xcae5ff, 0xccccff, 0xdaf7dc, 0xa6808c, 0xccb7ae, 0xd6cfcb,
@@ -23,11 +23,19 @@ const app: PIXI.Application = new PIXI.Application({
  * Filters
  */
 
-const number = 4;
+const number = 2;
 const loader: PIXI.Loader = PIXI.Loader.shared;
+const container = new PIXI.Container();
+
 loader.add("/oatv-logo.png").load(() => {
   const texture: PIXI.Texture<PIXI.Resource> = loader.resources["/oatv-logo.png"].texture!;
 
+  const WHITE = new PIXI.Sprite(PIXI.Texture.WHITE);
+  WHITE.width = window.innerWidth;
+
+  WHITE.height = window.innerHeight;
+  WHITE.anchor.set(0.5);
+  // container.addChild(WHITE);
   for (let i = 0; i < number; i++) {
     const scaleFactor = 0.5;
     const oatv_sprite: PIXI.Sprite = new PIXI.Sprite(texture);
@@ -41,10 +49,8 @@ loader.add("/oatv-logo.png").load(() => {
     oatvArray.push(new MovingSprite(oatv_sprite, scaleFactor));
   }
   const colorMatrixFilter = new PIXI.filters.ColorMatrixFilter();
-  app.stage.filters = [
-    colorMatrixFilter,
-    // new  AsciiFilter(4.5)
-  ];
+  app.stage.filters = [colorMatrixFilter];
+  app.stage.addChild(container);
   colorMatrixFilter.brightness(2, true);
 });
 
