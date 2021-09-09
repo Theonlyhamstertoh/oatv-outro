@@ -125,6 +125,8 @@ class MovingSprite {
         // console.log("has collided");
         resolveCollision(this, oatv);
         this.sprite.tint = colorArray[Math.floor(Math.random() * colorArray.length)];
+        oatv.sprite.tint = Math.random() * 0xffffff;
+        // oatv.sprite.tint = colorArray[Math.floor(Math.random() * colorArray.length)];
       }
     });
     // console.log(xDistance, xSpaceBetween);
