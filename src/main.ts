@@ -1,8 +1,6 @@
 import "./style.css";
 import * as PIXI from "pixi.js";
-import { OldFilmFilter } from "@pixi/filter-old-film";
-import { PixelateFilter } from "@pixi/filter-pixelate";
-import { AsciiFilter } from "@pixi/filter-ascii";
+// import { AsciiFilter } from "@pixi/filter-ascii";
 
 // color array
 const colorArray = [
@@ -28,25 +26,26 @@ const loader: PIXI.Loader = PIXI.Loader.shared;
 loader.add("/oatv-logo.png").load(() => {
   const texture: PIXI.Texture<PIXI.Resource> = loader.resources["/oatv-logo.png"].texture!;
 
-  for (let i = 0; i < 50; i++) {
+  for (let i = 0; i < 2; i++) {
     const scaleFactor = 0.5;
     const oatv_sprite: PIXI.Sprite = new PIXI.Sprite(texture);
     oatv_sprite.anchor.set(0.5);
     oatv_sprite.scale.set(scaleFactor);
-    const spawnWidthZone = Math.ceil(oatv_sprite.width);
-    console.log(spawnWidthZone);
-    oatv_sprite.x = Math.random() * (app.view.width - spawnWidthZone) + spawnWidthZone / 2;
-    oatv_sprite.y = Math.random() * (app.view.height - 440) + 220;
+    oatv_sprite.x = Math.random() * (app.view.width - oatv_sprite.width) + oatv_sprite.width / 2;
+    oatv_sprite.y = Math.random() * (app.view.height - oatv_sprite.height) + oatv_sprite.height / 2;
 
     app.stage.addChild(oatv_sprite);
     oatvArray.push(new MovingSprite(oatv_sprite, scaleFactor));
   }
   const colorMatrixFilter = new PIXI.filters.ColorMatrixFilter();
-  app.stage.filters = [colorMatrixFilter, new AsciiFilter(4.5)];
+  app.stage.filters = [
+    colorMatrixFilter,
+    // new  AsciiFilter(4.5)
+  ];
   colorMatrixFilter.brightness(2, true);
 });
 
-app.ticker.add((delta) => {
+app.ticker.add(() => {
   oatvArray.forEach((oatv) => {
     oatv.update();
   });
@@ -63,7 +62,7 @@ class MovingSprite {
   dy: number;
   scaleFactor: number;
 
-  constructor(sprite: PIXI.Sprite, scaleFactor) {
+  constructor(sprite: PIXI.Sprite, scaleFactor: number) {
     this.sprite = sprite;
     this.dx = Math.random() * 5 * Math.sign(Math.random() > 0.5 ? 1 : -1);
     this.dy = Math.random() * 5 * Math.sign(Math.random() > 0.5 ? 1 : -1);
@@ -89,6 +88,7 @@ class MovingSprite {
     }
 
     this.animate();
+    // this.detectCollision();
   }
 
   animate() {
@@ -96,5 +96,23 @@ class MovingSprite {
     this.sprite.y += this.dy;
   }
 
-  detectCollision() {}
+  detectCollision() {
+    // const xDistance = Math.abs(oatvArray[1].sprite.x - this.sprite.x);
+    // const xSpaceBetween = oatvArray[1].sprite.width / 2 + this.sprite.width / 2;
+    // const yDistance = Math.abs(oatvArray[1].sprite.y - this.sprite.y);
+    // const ySpaceBetween = oatvArray[1].sprite.height / 2 + this.sprite.height / 2;
+    // console.log(xDistance, xSpaceBetween);
+    // console.log(xDistance);
+    // if (xSpaceBetween >= xDistance ) {
+    //   this.dx = -this.dx;
+    //   this.sprite.tint = 0xff0000;
+    //   // this.sprite.tint = colorArray[Math.floor(Math.random() * colorArray.length)];
+    // }
+    // if (ySpaceBetween >= yDistance) {
+    //   this.dy = -this.dy;
+    //   // console.log(yDistance);
+    //   this.sprite.tint = 0x00ff00;
+    //   // this.sprite.tint = colorArray[Math.floor(Math.random() * colorArray.length)];
+    // }
+  }
 }
