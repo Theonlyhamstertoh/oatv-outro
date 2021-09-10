@@ -10,20 +10,24 @@ const colorArray = [
 ];
 // array of oatvs
 const oatvArray: Array<MovingSprite> = [];
+console.log(window.innerWidth);
 const app: PIXI.Application = new PIXI.Application({
   resizeTo: window,
   width: window.innerWidth,
   backgroundColor: 0x22222,
   height: window.innerHeight,
-  resolution: window.devicePixelRatio || 1,
+  // autoDensity: true,
   view: document.getElementById("pixi-canvas") as HTMLCanvasElement,
 });
 
+window.onload = () => {
+  console.log(window.innerWidth, window.innerHeight);
+};
 /**
  * Filters
  */
 
-const number = 2;
+const number = 5;
 const loader: PIXI.Loader = PIXI.Loader.shared;
 const container = new PIXI.Container();
 
@@ -117,18 +121,11 @@ class MovingSprite {
   detectCollision() {
     oatvArray.forEach((oatv) => {
       if (oatv.key === this.key) return;
-      // this is also taking account of itself!It will check against itself and that means, the value will always be at 0.
       const xSpaceBetween: number = oatv.sprite.width / 2 + this.sprite.width / 2;
-      // const hypotenuse: number = this.distance(oatv, this);
       const ySpaceBetween = oatv.sprite.height / 2 + this.sprite.height / 2;
-      // console.log(hypotenuse < xSpaceBetween && hypotenuse < ySpaceBetween);
       const xDistance: number = Math.abs(this.sprite.x - oatv.sprite.x);
       const yDistance = Math.abs(this.sprite.y - oatv.sprite.y);
-      // if(hypotenuse)
-      // console.log(xSpaceBetween > xDistance);
       if (ySpaceBetween >= yDistance && xSpaceBetween >= xDistance) {
-        console.log(yDistance);
-        // console.log("has collided");
         resolveCollision(this, oatv);
         this.sprite.tint = colorArray[Math.floor(Math.random() * colorArray.length)];
         oatv.sprite.tint = Math.random() * 0xffffff;
