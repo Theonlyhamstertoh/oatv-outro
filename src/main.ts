@@ -213,18 +213,5 @@ export default class MovingSprite {
         // oatv.sprite.tint = colorArray[Math.floor(Math.random() * colorArray.length)];
       }
     });
-    // console.log(xDistance, xSpaceBetween);
-    // console.log(xDistance);
-    // if (xSpaceBetween >= xDistance ) {
-    //   this.dx = -this.dx;
-    //   this.sprite.tint = 0xff0000;
-    //   // this.sprite.tint = colorArray[Math.floor(Math.random() * colorArray.length)];
-    // }
-    // if (ySpaceBetween >= yDistance) {
-    //   this.dy = -this.dy;
-    //   // console.log(yDistance);
-    //   this.sprite.tint = 0x00ff00;
-    //   // this.sprite.tint = colorArray[Math.floor(Math.random() * colorArray.length)];
-    // }
   }
 }
