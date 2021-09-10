@@ -20,19 +20,55 @@ export const app: PIXI.Application = new PIXI.Application({
 });
 
 /**
+ *
+ * Old Film Filter
+ *
+ */
+
+class BackgroundOldFilm {
+  oldFilm: OldFilmFilter;
+  background: PIXI.Sprite;
+  container: PIXI.Container;
+
+  constructor() {
+    this.oldFilm = new OldFilmFilter();
+    this.background = new PIXI.Sprite();
+    this.container = new PIXI.Container();
+
+    this.oldFilm.sepia = 0.4;
+    this.oldFilm.noise = 0.2;
+    this.oldFilm.scratch = 0.7;
+    this.oldFilm.scratchDensity = 0.5;
+
+    app.stage.addChild(this.background);
+    // this.container.addChild(this.background);
+    // app.stage.addChild(this.container);
+    // this.container.filters = [this.oldFilm];
+    app.stage.filters = [this.oldFilm];
+
+    // this.background.tint = 0xb38c38;
+    this.background.alpha = 0.5;
+  }
+}
+
+/**
  * Filters
  */
 // array of oatvs
 export const oatvArray: Array<MovingSprite> = [];
 const totalOATVCount = 5;
 const loader: PIXI.Loader = PIXI.Loader.shared;
-const container = new PIXI.Container();
+const oatvContainer = new PIXI.Container();
 const scaleFactor = 0.5;
+
 const colorMatrixFilter = new PIXI.filters.ColorMatrixFilter();
 
-loader.add("/oatv-logo.png").load(() => {
+const filmTexture = new BackgroundOldFilm();
+app.stage.addChild(oatvContainer);
+loader.add(["/oatv-logo.png", "/grunge.jpg"]).load(() => {
   const texture: PIXI.Texture<PIXI.Resource> = loader.resources["/oatv-logo.png"].texture!;
-
+  const grungeTexture: PIXI.Texture<PIXI.Resource> = loader.resources["/grunge.jpg"].texture!;
+  filmTexture.background.texture = grungeTexture;
   for (let i = 0; i < totalOATVCount; i++) {
     const oatv_sprite: PIXI.Sprite = new PIXI.Sprite(texture);
     oatv_sprite.anchor.set(0.5);
@@ -41,28 +77,16 @@ loader.add("/oatv-logo.png").load(() => {
     oatv_sprite.x = Math.random() * (app.view.width - oatv_sprite.width) + oatv_sprite.width / 2;
     oatv_sprite.y = Math.random() * (app.view.height - oatv_sprite.height) + oatv_sprite.height / 2;
 
-    app.stage.addChild(oatv_sprite);
+    oatvContainer.addChild(oatv_sprite);
     oatvArray.push(new MovingSprite(oatv_sprite, scaleFactor));
   }
-  app.stage.filters = [colorMatrixFilter];
+  oatvContainer.filters = [colorMatrixFilter];
   colorMatrixFilter.brightness(2, true);
 });
 
-/**
- *
- * Old Film Filter
- *
- */
-
-const lineGraphic = new PIXI.Graphics();
-lineGraphic.beginFill();
-lineGraphic.drawRect(0, 0, window.innerWidth, window.innerHeight);
-
-container.addChild(lineGraphic);
-container.filters = [new OldFilmFilter()];
-// app.stage.addChild(container);
-
 app.ticker.add(() => {
+  filmTexture.oldFilm.seed += 0.01;
+
   oatvArray.forEach((oatv) => {
     oatv.update();
   });
@@ -72,7 +96,7 @@ app.ticker.add(() => {
  * Resizing function
  */
 window.addEventListener("resize", () => {
-  oatvArray.forEach((oatv) => {
+  oatvArray.forEach(() => {
     // oatv.sprite.scale.set(0.3);
     // oatv.update();
   });
@@ -84,11 +108,6 @@ window.addEventListener("resize", () => {
 //   console.log(a.x, b);
 //   return Math.sqrt(Math.pow(xDistance, 2) + Math.pow(yDistance, 2));
 // }
-
-const colorArray = [
-  0xdfff00, 0xffbf00, 0x9fe2bf, 0xcae5ff, 0xccccff, 0xdaf7dc, 0xa6808c, 0xccb7ae, 0xd6cfcb,
-  0xf9f7f3, 0xe8fcc2,
-];
 
 interface velocityObject {
   x: number;
