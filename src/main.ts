@@ -1,8 +1,8 @@
 import "./style.css";
 import * as PIXI from "pixi.js";
 import { v4 as uuidv4 } from "uuid";
-import { AsciiFilter } from "@pixi/filter-ascii";
-import { OldFilmFilter } from "@pixi/filter-old-film";
+// import { AsciiFilter } from "@pixi/filter-ascii";
+// import { OldFilmFilter } from "@pixi/filter-old-film";
 // color array
 const colorArray = [
   0xdfff00, 0xffbf00, 0x9fe2bf, 0xcae5ff, 0xccccff, 0xdaf7dc, 0xa6808c, 0xccb7ae, 0xd6cfcb,
