@@ -1,6 +1,5 @@
 import * as PIXI from "pixi.js";
 import { v4 as uuidv4 } from "uuid";
-import resolveCollision from "./collisionDetection";
 import randomColor from "randomcolor";
 import type Controller from "./Controller";
 
@@ -26,15 +25,15 @@ export default class MovingSprite {
     this.sprite = sprite;
 
     this.scaleFactor = scaleFactor;
+    this.mass = 1 * scaleFactor;
     this.velocity = {
-      x: (Math.random() - 0.5) * 5,
-      y: (Math.random() - 0.5) * 5,
+      x: (Math.random() - 0.5) * 7,
+      y: (Math.random() - 0.5) * 7,
     };
-    this.mass = 2 * scaleFactor;
     this.key = uuidv4();
   }
 
-  update(controller: Controller) {
+  update(controller: Controller): void {
     const { width, height } = this.sprite.texture.frame;
 
     if (
@@ -42,8 +41,7 @@ export default class MovingSprite {
       this.sprite.x <= 0 + (width * this.scaleFactor) / 2
     ) {
       this.velocity.x = -this.velocity.x;
-
-      this.sprite.tint = this.generateColor();
+      this.sprite.tint = generateColor();
     }
 
     if (
@@ -51,11 +49,11 @@ export default class MovingSprite {
       this.sprite.y >= controller.app.view.height - (height * this.scaleFactor) / 2
     ) {
       this.velocity.y = -this.velocity.y;
-      this.sprite.tint = this.generateColor();
+      this.sprite.tint = generateColor();
     }
 
     this.animate();
-    this.detectCollision(controller);
+    // this.detectCollision(controller);
   }
 
   animate() {
@@ -63,25 +61,26 @@ export default class MovingSprite {
     this.sprite.y += this.velocity.y;
   }
 
-  generateColor() {
-    const color = randomColor({ luminosity: "light" });
-    const convertedColor = color.replace(/#/, "0x");
-    const numberColor = parseInt(convertedColor, 16);
-    return numberColor;
-  }
-  detectCollision(controller: Controller) {
-    controller.oatvArray.forEach((oatv) => {
-      if (oatv.key === this.key) return;
-      const xSpaceBetween: number = oatv.sprite.width / 2 + this.sprite.width / 2;
-      const ySpaceBetween = oatv.sprite.height / 2 + this.sprite.height / 2;
-      const xDistance: number = Math.abs(this.sprite.x - oatv.sprite.x);
-      const yDistance = Math.abs(this.sprite.y - oatv.sprite.y);
-      if (ySpaceBetween >= yDistance && xSpaceBetween >= xDistance) {
-        resolveCollision(this, oatv);
-        this.sprite.tint = this.generateColor();
-        // oatv.sprite.tint = this.generateColor();
-        // oatv.sprite.tint = colorArray[Math.floor(Math.random() * colorArray.length)];
-      }
-    });
-  }
+  // detectCollision(controller: Controller) {
+  //   // console.log(this.sprite.getBounds());
+  //   controller.oatvArray.forEach((oatv) => {
+  //     if (oatv.key === this.key) return;
+
+  //     const xSpaceBetween: number = oatv.sprite.width / 2 + this.sprite.width / 2;
+  //     const ySpaceBetween = oatv.sprite.height / 2 + this.sprite.height / 2;
+  //     const xDistance: number = Math.abs(this.sprite.x - oatv.sprite.x);
+  //     const yDistance = Math.abs(this.sprite.y - oatv.sprite.y);
+  //     if (ySpaceBetween >= yDistance && xSpaceBetween >= xDistance) {
+  //       this.sprite.tint = generateColor();
+  //       oatv.sprite.tint = generateColor();
+  //     }
+  //   });
+  // }
+}
+
+function generateColor() {
+  const color = randomColor({ luminosity: "light" });
+  const convertedColor = color.replace(/#/, "0x");
+  const numberColor = parseInt(convertedColor, 16);
+  return numberColor;
 }

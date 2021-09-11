@@ -49,7 +49,7 @@ export default class Controller {
 
   addOATV(texture: PIXI.Texture<PIXI.Resource>) {
     const oatv_sprite: PIXI.Sprite = new PIXI.Sprite(texture);
-    const scale = Math.random() * 0.2 + 0.4;
+    const scale = Math.random() * 0.25 + 0.45;
     oatv_sprite.anchor.set(0.5);
     oatv_sprite.scale.set(scale);
 
@@ -57,7 +57,6 @@ export default class Controller {
       Math.random() * (this.app.view.width - oatv_sprite.width) + oatv_sprite.width / 2;
     oatv_sprite.y =
       Math.random() * (this.app.view.height - oatv_sprite.height) + oatv_sprite.height / 2;
-
     this.oatvContainer.addChild(oatv_sprite);
     this.oatvArray.push(new MovingSprite(oatv_sprite, scale));
   }

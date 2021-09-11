@@ -25,7 +25,7 @@ export default class BackgroundOldFilm {
     this.oldFilm.sepia = 0;
     this.oldFilm.autoFit = true;
     this.oldFilm.noise = 0.25;
-    this.oldFilm.vignetting = 0.37;
+    this.oldFilm.vignetting = 0.001;
     this.oldFilm.scratch = 0.2;
     this.oldFilm.scratchDensity = 0.5;
 
