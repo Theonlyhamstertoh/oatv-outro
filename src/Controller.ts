@@ -2,7 +2,6 @@ import "./style.css";
 import * as PIXI from "pixi.js";
 import BackgroundOldFilm from "./BackgroundOldFilm";
 import MovingSprite from "./MovingSprite";
-import { AsciiFilter } from "@pixi/filter-ascii";
 
 /**
  *
