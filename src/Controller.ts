@@ -63,7 +63,10 @@ export default class Controller {
 
   resizeListener() {
     window.addEventListener("resize", () => {
-      this.oatvArray.forEach(() => {});
+      this.oldFilmTexture.background.width = window.innerWidth;
+      this.oldFilmTexture.background.height = window.innerHeight;
+      this.oldFilmTexture.background.x = window.innerWidth / 2;
+      this.oldFilmTexture.background.y = window.innerHeight / 2;
     });
   }
 }
