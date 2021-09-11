@@ -2,6 +2,7 @@ import "./style.css";
 import * as PIXI from "pixi.js";
 import BackgroundOldFilm from "./BackgroundOldFilm";
 import MovingSprite from "./MovingSprite";
+import { AsciiFilter } from "@pixi/filter-ascii";
 
 /**
  *
@@ -28,7 +29,7 @@ export default class Controller {
       view: document.getElementById("pixi-canvas") as HTMLCanvasElement,
     });
 
-    this.count = 16;
+    this.count = 1;
     this.oatvArray = [];
     this.scaleFactor = 0.5;
     this.oldFilmTexture = new BackgroundOldFilm(this.app);

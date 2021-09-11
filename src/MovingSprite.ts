@@ -30,7 +30,7 @@ export default class MovingSprite {
       x: (Math.random() - 0.5) * 5,
       y: (Math.random() - 0.5) * 5,
     };
-    this.mass = 1;
+    this.mass = 2 * scaleFactor;
     this.key = uuidv4();
   }
 
@@ -79,7 +79,7 @@ export default class MovingSprite {
       if (ySpaceBetween >= yDistance && xSpaceBetween >= xDistance) {
         resolveCollision(this, oatv);
         this.sprite.tint = this.generateColor();
-        oatv.sprite.tint = this.generateColor();
+        // oatv.sprite.tint = this.generateColor();
         // oatv.sprite.tint = colorArray[Math.floor(Math.random() * colorArray.length)];
       }
     });
