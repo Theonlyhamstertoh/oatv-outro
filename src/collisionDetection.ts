@@ -1,5 +1,11 @@
-import MovingSprite from "./MovingSprite";
+import type MovingSprite from "./MovingSprite";
 
+export class Cool {
+  array: Array<number>;
+  constructor() {
+    this.array = [];
+  }
+}
 export default function resolveCollision(particle: MovingSprite, otherParticle: MovingSprite) {
   const xVelocityDiff = particle.velocity.x - otherParticle.velocity.x;
   const yVelocityDiff = particle.velocity.y - otherParticle.velocity.y;
