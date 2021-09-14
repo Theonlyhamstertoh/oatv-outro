@@ -34,7 +34,7 @@ export default class Controller {
     };
     this.count = 1;
     this.oatvArray = [];
-    this.scaleFactor = 0.45;
+    this.scaleFactor = 0.65;
     this.oldFilmTexture = new BackgroundOldFilm(this.app);
     this.oatvContainer = new PIXI.Container();
     this.app.stage.addChild(this.oatvContainer);
