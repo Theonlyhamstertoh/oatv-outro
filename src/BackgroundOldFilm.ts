@@ -32,11 +32,11 @@ export default class BackgroundOldFilm {
     this.background.alpha = 0.5;
 
     app.stage.addChild(this.background);
-    app.stage.filters = [this.oldFilm];
-    app.ticker.add((delta) => {
-      if (this.oldFilm.seed > 1) this.oldFilm.seed = 0;
-      this.oldFilm.seed += 0.01 * delta;
-    });
+    // app.stage.filters = [this.oldFilm];
+    // app.ticker.add((delta) => {
+    //   if (this.oldFilm.seed > 1) this.oldFilm.seed = 0;
+    //   this.oldFilm.seed += 0.01 * delta;
+    // });
   }
 
   initializeBackground() {}
