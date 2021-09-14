@@ -87,10 +87,10 @@ export default class Controller {
         // oatv.sprite.x -= this.app.view.width - oatv.sprite.width + oatv.sprite.width / 2;
         // oatv.sprite.y = this.app.view.height - oatv.sprite.height + oatv.sprite.height / 2;
       });
-      // this.oldFilmTexture.background.width = window.innerWidth;
-      // this.oldFilmTexture.background.height = window.innerHeight;
-      // this.oldFilmTexture.background.x = window.innerWidth / 2;
-      // this.oldFilmTexture.background.y = window.innerHeight / 2;
+      this.oldFilmTexture.background.width = window.innerWidth;
+      this.oldFilmTexture.background.height = window.innerHeight;
+      this.oldFilmTexture.background.x = window.innerWidth / 2;
+      this.oldFilmTexture.background.y = window.innerHeight / 2;
     });
   }
 }
