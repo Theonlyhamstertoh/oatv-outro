@@ -13,7 +13,7 @@ const loader: PIXI.Loader = PIXI.Loader.shared;
 loader.add(["/oatv-logo.png", "/grunge.jpg"]).load(() => {
   const texture: PIXI.Texture<PIXI.Resource> = loader.resources["/oatv-logo.png"].texture!;
   const grungeTexture: PIXI.Texture<PIXI.Resource> = loader.resources["/grunge.jpg"].texture!;
-  controller.oldFilmTexture.background.texture = grungeTexture;
+  // controller.oldFilmTexture.background.texture = grungeTexture;
 
   for (let i = 0; i < controller.count; i++) {
     controller.addOATV(texture);

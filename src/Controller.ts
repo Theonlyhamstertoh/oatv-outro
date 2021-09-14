@@ -21,7 +21,7 @@ export default class Controller {
     this.app = new PIXI.Application({
       resizeTo: window,
       width: window.innerWidth,
-      backgroundColor: 0x3b2e0b,
+      backgroundColor: 0x111111,
       antialias: true,
       height: window.innerHeight,
       autoDensity: true,
@@ -30,7 +30,7 @@ export default class Controller {
 
     this.count = 1;
     this.oatvArray = [];
-    this.scaleFactor = 0.5;
+    this.scaleFactor = 0.45;
     this.oldFilmTexture = new BackgroundOldFilm(this.app);
     this.oatvContainer = new PIXI.Container();
     this.app.stage.addChild(this.oatvContainer);
@@ -49,16 +49,15 @@ export default class Controller {
 
   addOATV(texture: PIXI.Texture<PIXI.Resource>) {
     const oatv_sprite: PIXI.Sprite = new PIXI.Sprite(texture);
-    const scale = Math.random() * 0.25 + 0.45;
     oatv_sprite.anchor.set(0.5);
-    oatv_sprite.scale.set(scale);
+    oatv_sprite.scale.set(this.scaleFactor);
 
     oatv_sprite.x =
       Math.random() * (this.app.view.width - oatv_sprite.width) + oatv_sprite.width / 2;
     oatv_sprite.y =
       Math.random() * (this.app.view.height - oatv_sprite.height) + oatv_sprite.height / 2;
     this.oatvContainer.addChild(oatv_sprite);
-    this.oatvArray.push(new MovingSprite(oatv_sprite, scale));
+    this.oatvArray.push(new MovingSprite(oatv_sprite, this.scaleFactor));
   }
 
   resizeListener() {
