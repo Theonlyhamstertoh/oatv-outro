@@ -16,10 +16,11 @@ export default class Controller {
   colorMatrixFilter: any; // suppose to be PIXI.filters.ColorMatrixFilter()
   oldFilmTexture: BackgroundOldFilm;
   oatvContainer: PIXI.Container;
+  prevWindowSize: WindowSize;
 
   constructor() {
     this.app = new PIXI.Application({
-      resizeTo: window,
+      // resizeTo: window,
       width: window.innerWidth,
       backgroundColor: 0x111111,
       antialias: true,
@@ -27,7 +28,10 @@ export default class Controller {
       autoDensity: true,
       view: document.getElementById("pixi-canvas") as HTMLCanvasElement,
     });
-
+    this.prevWindowSize = {
+      width: this.app.view.width,
+      height: this.app.view.height,
+    };
     this.count = 1;
     this.oatvArray = [];
     this.scaleFactor = 0.45;
@@ -62,10 +66,36 @@ export default class Controller {
 
   resizeListener() {
     window.addEventListener("resize", () => {
-      this.oldFilmTexture.background.width = window.innerWidth;
-      this.oldFilmTexture.background.height = window.innerHeight;
-      this.oldFilmTexture.background.x = window.innerWidth / 2;
-      this.oldFilmTexture.background.y = window.innerHeight / 2;
+      this.app.renderer.resize(window.innerWidth, window.innerHeight);
+      this.app.render();
+      this.oatvArray.forEach((oatv) => {
+        // get the rectangular bound surrounding oatv
+        const bound = oatv.sprite.getBounds();
+        // console.log(bound.x);
+        const changedWidth = this.app.view.width - this.prevWindowSize.width;
+        const changedHeight = this.app.view.height - this.prevWindowSize.height;
+
+        if (bound.right >= window.innerWidth - 10 || bound.bottom >= window.innerHeight - 10) {
+          oatv.sprite.x += changedWidth > 0 ? 0 : changedWidth;
+          oatv.sprite.y += changedHeight > 0 ? 0 : changedHeight;
+        }
+
+        // update the old window size to the current
+        this.prevWindowSize.width = this.app.view.width;
+        this.prevWindowSize.height = this.app.view.height;
+
+        // oatv.sprite.x -= this.app.view.width - oatv.sprite.width + oatv.sprite.width / 2;
+        // oatv.sprite.y = this.app.view.height - oatv.sprite.height + oatv.sprite.height / 2;
+      });
+      // this.oldFilmTexture.background.width = window.innerWidth;
+      // this.oldFilmTexture.background.height = window.innerHeight;
+      // this.oldFilmTexture.background.x = window.innerWidth / 2;
+      // this.oldFilmTexture.background.y = window.innerHeight / 2;
     });
   }
+}
+
+interface WindowSize {
+  width: number;
+  height: number;
 }
