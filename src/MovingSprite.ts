@@ -27,8 +27,8 @@ export default class MovingSprite {
     this.scaleFactor = scaleFactor;
     this.mass = 1 * scaleFactor;
     this.velocity = {
-      x: Math.random() - 0.5 + 2,
-      y: Math.random() - 0.5 + 2,
+      x: Math.random() - 0.5 + 4,
+      y: Math.random() - 0.5 + 4,
     };
     this.key = uuidv4();
   }
